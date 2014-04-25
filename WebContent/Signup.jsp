@@ -4,10 +4,10 @@
 <h2>SignUp</h2>
 <table>
     <tr>
-        <td valign="top">
-            <%-- -------- Include menu HTML code -------- --%>
+        <%-- <td valign="top">
+            -------- Include menu HTML code --------
             <jsp:include page="/menu.html" />
-        </td>
+        </td> --%>
         <td>
             <%-- Import the java.sql package --%>
             <%@ page import="java.sql.*"%>
