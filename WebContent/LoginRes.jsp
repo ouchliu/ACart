@@ -69,7 +69,7 @@
                 // Wrap the SQL exception in a runtime exception to propagate
                 // it upwards
              %>   
-                User doesn't exist.
+                User dosssesn't exist.
             
             <form action="LoginRes.jsp" method="GET">
             	Please enter your Username no password required: <p />

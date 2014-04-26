@@ -66,7 +66,7 @@
 			  		<%
 			  		}
 			   			%>
-					</select>
+					</select></th>
                     <th><input value="" name="age" size="5"/></th>
                     <th><select name="state">
 			 		<%
@@ -76,8 +76,7 @@
 			  		<%
 			  		}
 			   			%>
-					</select>
-                    <th>
+					</select></th>
                     <th><input type="submit" value="Insert"/></th>
                 </form>
             </tr>
