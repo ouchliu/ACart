@@ -24,10 +24,31 @@
 		
 		}
 	}
+	
+	
+	
+	
 %>
+	<%-- Initialization of students and nextPID --%>
+    <% if(session.getAttribute("cartitem")==null) 
+         session.setAttribute("cartitem", new LinkedHashMap<String, Cartitem>());
+       if(session.getAttribute("itemnumber")==null)
+         session.setAttribute("itemnumber", 1);
+    %>    
+    
+    <%-- -------- Retrieval code (already initialized students and nextPID) -------- --%>
+    <% 
+        // retrieves student data from session scope
+        LinkedHashMap<String, Cartitem> cartitem = (LinkedHashMap<String, Cartitem>)session.getAttribute("cartitem");
+    
+        // retrieves the latest pid
+        Integer itemnumber = (Integer)(session.getAttribute("itemnumber"));
+    %>
+
+
 
 <%-- Import the java.sql package --%>
-            <%@ page import="java.sql.*"%>
+            <%@ page import="java.sql.*, cartitem.*, java.util.*"%>
             <%-- -------- Open Connection Code -------- --%>
             <%
             
@@ -134,6 +155,32 @@
             
             
     </tr>
+    		<%-- -------- ADD TO CARD Code -------- --%>
+    <%       
+       // Check if an insertion is requested
+       if (action != null && action.equals("addtocart")) {
+                    
+          // make new student to add to students map
+       		 Cartitem newCartitem = new Cartitem(); 
+          	
+          	 if (!(cartitem.get(request.getParameter("itemname"))==null)){
+       				newCartitem = cartitem.get(request.getParameter("itemname"));
+     		       	newCartitem.setAmount( (cartitem.get(request.getParameter("itemname"))).getAmount()+ Integer.parseInt(request.getParameter("amount")));                   
+     		       	itemnumber--;
+          	 } else {
+	          // add the attributes from the request object to new student
+			   newCartitem.setNo(Integer.parseInt(request.getParameter("no")));                   
+	           newCartitem.setItemname(request.getParameter("itemname"));
+	           newCartitem.setPrice(Float.parseFloat(request.getParameter("price")));
+		       newCartitem.setAmount(Integer.parseInt(request.getParameter("amount")));                   
+	          // add new student to the map
+       		  } cartitem.put(request.getParameter("itemname"), newCartitem);
+	           itemnumber++;
+	           session.setAttribute("itemnumber", itemnumber);
+         }
+     %>
+    
+    
     
             
             
@@ -205,8 +252,10 @@
 
             <tr>
                 <form action="ProductOrder.jsp" method="POST">
-                    <input type="hidden" name="action" value="addtocart"/>
-                    <input type="hidden" name="id" value="<%=rsC.getInt("id")%>"/>
+                    <input type="hidden" name="action" value="preaddtocart"/>
+                    <input type="hidden" name="preitemname" value="<%=rsC.getString("name")%>"/>
+                    <input type="hidden" name="preprice" value="<%=rsC.getInt("price")%>"/>
+                    
 
                 <%-- Get the id --%>
 					<td>
@@ -227,7 +276,7 @@
                 	</td>
 
                 <%-- Button --%>
-                <td><input type="submit" value="Add To Cart"></td>
+                <td><input type="submit" value="Buy"></td>
                 </form>
                 
            
