@@ -57,17 +57,23 @@
             %>
             <h2>Congratulations</h2>
 			<%= productname %> has been added
+			<br>
+			<br>
+			<a href="Products.jsp">Go back</a></li>
             
             <%-- -------- Close Connection Code -------- --%>
             <%
                 conn.close();
-            } catch (SQLException e) {
+            } catch (Exception e) {
 
                 // Wrap the SQL exception in a runtime exception to propagate
                 // it upwards
             %>
             	<h2>Sorry</h2>
             	Failure to insert new product.
+            	<br>
+				<br>
+				<a href="Products.jsp">Go back</a></li>
             <%
             }
             finally {
