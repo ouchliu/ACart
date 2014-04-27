@@ -11,7 +11,8 @@
             Connection conn = null;
             /* PreparedStatement pstmt = null; */
             ResultSet rsUser = null;
-            
+            String username = request.getParameter("username");
+            session.setAttribute("username", username);
             try {
                 // Registering Postgresql JDBC driver with the DriverManager
                 Class.forName("org.postgresql.Driver");
@@ -39,15 +40,13 @@
             %>
             <% 
             rsUser.next();
-            	if(rsUser.getString("name") == null) {
-            	%>
-            		User doesn't exist.
-            	<%		
-            	} else {
-            		String username = request.getParameter("username"); 
-        			session.setAttribute("username", username);
+            	if(!rsUser.getString("name").equals(null)) {
+            	
         		%>
-        			Hello <%= username%>
+        			Hello <%= (String)(session.getAttribute("username"))%>
+        			<br>
+        			<a href="/ACart/ProductBrowse.jsp"> Wanna do some shopping?!Click here </a>
+        			
         		<% 
             	}
             

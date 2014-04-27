@@ -196,7 +196,9 @@
 
                 // Wrap the SQL exception in a runtime exception to propagate
                 // it upwards
-                throw new RuntimeException(e);
+                %>
+                	This Category already exists.
+                <%
             
             	/* The requested data modification failed.
              */
