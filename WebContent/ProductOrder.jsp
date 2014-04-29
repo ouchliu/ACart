@@ -21,6 +21,9 @@
             
 
 <body>
+<div>
+      <span style="float:right"><a href="BuyShoppingCart.jsp">Buy Shopping Cart<a></span>Hello, <%= session.getAttribute("username")%><br/>
+</div>
 <table>
     <tr>
         <td>
@@ -32,6 +35,7 @@
                 <th>Name</th>
                 <th>Price</th>
                 <th>Amount</th>
+                <th>Total</th>
                 <!-- <th>Total</th> -->
             </tr>
 
@@ -49,6 +53,7 @@
                 <td><%=((Cartitem)pair.getValue()).getItemname() %></td>
                 <td><%=((Cartitem)pair.getValue()).getPrice()%></td>
                 <td><%=((Cartitem)pair.getValue()).getAmount()%></td>
+                <td><%=((Cartitem)pair.getValue()).getPrice() * ((Cartitem)pair.getValue()).getAmount()%></td>
             </tr>
             <%
                 }
@@ -63,6 +68,8 @@
                     <input type="hidden" name="itemname" value="<%=request.getParameter("preitemname")%>"/>
                     <input type="hidden" name="price" value="<%=Integer.parseInt(request.getParameter("preprice"))%>"/>
                     <input type="hidden" name="no" value="<%=(Integer)(session.getAttribute("itemnumber"))%>"/>
+                    <input type="hidden" name="id" value="<%=request.getParameter("preid")%>"/>
+                    
                     
                     <td><%= session.getAttribute("itemnumber") %></td>
                     <td><%= request.getParameter("preitemname") %></td>

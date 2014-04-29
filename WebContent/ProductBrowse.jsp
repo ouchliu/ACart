@@ -12,7 +12,15 @@
 		<% 
 	} else {
 		%>
-		Hello, <%= session.getAttribute("username")%>
+		
+<div>
+      <span style="float:right">
+      	<a href="BuyShoppingCart.jsp">Buy Shopping Cart<a>
+      </span>
+      Hello, <%= session.getAttribute("username")%> 
+      <a href="Login.html">Log out<a>
+      <br/>
+</div>
 		<% 
 	/* } */
 	String action = request.getParameter("action");
@@ -34,6 +42,9 @@
          session.setAttribute("cartitem", new LinkedHashMap<String, Cartitem>());
        if(session.getAttribute("itemnumber")==null)
          session.setAttribute("itemnumber", 1);
+       if(session.getAttribute("totalprice")==null)
+           session.setAttribute("totalprice", 0.0);
+       
     %>    
     
     <%-- -------- Retrieval code (already initialized students and nextPID) -------- --%>
@@ -169,6 +180,7 @@
      		       	itemnumber--;
           	 } else {
 	          // add the attributes from the request object to new student
+	           newCartitem.setId(Integer.parseInt(request.getParameter("id")));                   
 			   newCartitem.setNo(Integer.parseInt(request.getParameter("no")));                   
 	           newCartitem.setItemname(request.getParameter("itemname"));
 	           newCartitem.setPrice(Float.parseFloat(request.getParameter("price")));
@@ -255,6 +267,7 @@
                     <input type="hidden" name="action" value="preaddtocart"/>
                     <input type="hidden" name="preitemname" value="<%=rsC.getString("name")%>"/>
                     <input type="hidden" name="preprice" value="<%=rsC.getInt("price")%>"/>
+					<input type="hidden" name="preid" value="<%=rsC.getInt("id")%>"/>
                     
 
                 <%-- Get the id --%>
@@ -272,7 +285,7 @@
                     	<%=rsC.getString("category")%>
 					</td>
                     <td>
-                    	<%=rsC.getFloat("price")%>
+                    	$<%=rsC.getFloat("price")%>
                 	</td>
 
                 <%-- Button --%>

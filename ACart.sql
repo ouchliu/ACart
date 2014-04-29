@@ -20,7 +20,7 @@ CREATE TABLE categories (
     id		SERIAL PRIMARY KEY,
     name	TEXT UNIQUE NOT NULL,
     description TEXT 
-)
+);
 
 CREATE TABLE products (
     id		SERIAL PRIMARY KEY,
@@ -29,7 +29,22 @@ CREATE TABLE products (
     category    TEXT NOT NULL,
     price	DECIMAL,
     FOREIGN KEY (category) REFERENCES categories(name)
-)
+);
+
+CREATE TABLE orders (
+    id          SERIAL PRIMARY KEY,
+    totalprice	FLOAT NOT NULL,
+    cardnumber TEXT NOT NULL
+);
+
+CREATE TABLE orders_products (
+    id          SERIAL PRIMARY KEY,
+    orderid	INT NOT NULL,
+    productid   INT NOT NULL,
+    amount      INT NOT NULL,
+    FOREIGN KEY (orderid) REFERENCES orders(id),
+    FOREIGN KEY (productid) REFERENCES products(id)
+);
 
 INSERT INTO states (name) values ('Alabama');
 INSERT INTO states (name) values ('Alaska');

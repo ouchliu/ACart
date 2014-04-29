@@ -1,4 +1,9 @@
-
+<%
+	session.setAttribute("username", null);
+	session.setAttribute("cartitem", null);
+	session.setAttribute("itemnumber", null);
+	session.setAttribute("totalprice", null);
+%>
 
 <html>
 <head><title>ACart Login</title></head> 

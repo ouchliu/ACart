@@ -2,11 +2,18 @@
 
 <body>
 
-<h2>Login</h2>
+<div>
+      <span style="float:right"><a href="BuyShoppingCart.jsp">Buy Shopping Cart<a></span><h2>Login</h2><br/>
+</div>
             <%-- Import the java.sql package --%>
             <%@ page import="java.sql.*"%>
             <%-- -------- Open Connection Code -------- --%>
             <%
+            if(!(session.getAttribute("students")==null) && !((String)(session.getAttribute("username"))).equals(request.getParameter("username"))) {
+            	session.setAttribute("cartitem", null);
+                session.setAttribute("itemnumber", null);
+            }
+            
             
             Connection conn = null;
             /* PreparedStatement pstmt = null; */
