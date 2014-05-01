@@ -23,6 +23,8 @@
             PreparedStatement pstmt = null;
             PreparedStatement pstmtOP = null;
             PreparedStatement pstmtUID = null;
+            PreparedStatement pstmtPro = null;
+
 
             ResultSet rs = null;
             ResultSet rsuser = null;
@@ -93,6 +95,19 @@
                         pstmtOP.setInt(2, ((Cartitem)pair.getValue()).getId());                    
                         pstmtOP.setInt(3, ((Cartitem)pair.getValue()).getAmount());     
                         int rowCountOP = pstmtOP.executeUpdate();
+                        
+                        pstmtPro = conn
+                                .prepareStatement("UPDATE products SET sku = (sku - ?) WHERE id = ?");
+						%>
+                        Amount:<%= ((Cartitem)pair.getValue()).getAmount()%>
+                        Id:<%= ((Cartitem)pair.getValue()).getId()%>
+                        <% 
+                        pstmtPro.setInt(1, ((Cartitem)pair.getValue()).getAmount());     
+                        pstmtPro.setInt(2, ((Cartitem)pair.getValue()).getId());                    
+
+                        int rowCountPro = pstmtPro.executeUpdate();
+                        
+                        
             		}
  
  
@@ -158,17 +173,17 @@
                 // it upwards
              %>   
              	
-                 User doesn't exist.
+                 <!-- User doesn't exist.
             
             <form action="LoginRes.jsp" method="GET">
             	Please enter your Username no password required: <p />
             	<input value="" name="username" size="20"/><p /> 
             	<input type="hidden" name ="action" value="checkuser"/>
             	<input type="submit" value="Login"/>
-            </form>  
+            </form> -->  
             <%
-/*             	throw new RuntimeException(e);
- */            }
+             	throw new RuntimeException(e);
+             }
             finally {
                 // Release resources in a finally block in reverse-order of
                 // their creation
