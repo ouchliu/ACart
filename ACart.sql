@@ -34,7 +34,9 @@ CREATE TABLE products (
 CREATE TABLE orders (
     id          SERIAL PRIMARY KEY,
     totalprice	FLOAT NOT NULL,
-    cardnumber TEXT NOT NULL
+    cardnumber TEXT NOT NULL,
+    userid INT NOT NULL,
+    FOREIGN KEY (userid) REFERENCES users(id)
 );
 
 CREATE TABLE orders_products (

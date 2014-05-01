@@ -11,16 +11,22 @@
         
             // retrieves the latest pid
             Integer itemnumber = (Integer)(session.getAttribute("itemnumber"));
+            String username = (String)(session.getAttribute("username"));
             
             session.setAttribute("cartitem", null);
             session.setAttribute("itemnumber", null);
+      
             
             
             Connection conn = null;
             /* PreparedStatement pstmt = null; */
             PreparedStatement pstmt = null;
             PreparedStatement pstmtOP = null;
+            PreparedStatement pstmtUID = null;
+
             ResultSet rs = null;
+            ResultSet rsuser = null;
+
             
             try {
                 // Registering Postgresql JDBC driver with the DriverManager
@@ -45,19 +51,28 @@
                     // Begin transaction
                     conn.setAutoCommit(false);
 
+ 					pstmtUID = conn
+         				.prepareStatement("SELECT id FROM users WHERE name = ?");
+                    pstmtUID.setString(1, username);
+					rsuser = pstmtUID.executeQuery();
+					Integer userid = 0;
+					rsuser.next();
+					userid = rsuser.getInt("id");
+					
                     // Create the prepared statement and use it to
                     // INSERT student values INTO the students table.
                     pstmt = conn
-                    .prepareStatement("INSERT INTO orders (totalprice, cardnumber) VALUES (?, ?)");
-
+                    .prepareStatement("INSERT INTO orders (totalprice, cardnumber, userid) VALUES (?, ?, ?)");
+                    
                     pstmt.setDouble(1, (Double)(session.getAttribute("totalprice")) );
                     pstmt.setString(2, request.getParameter("cardnumber"));
+                    pstmt.setInt(3, userid);
+
 /*                     pstmt.setDate(3, (java.sql.Date)(new java.util.Date()));
  */					
                     int rowCount = pstmt.executeUpdate();
  
  					Statement statement = conn.createStatement();
-	
  					rs = statement.executeQuery("SELECT id FROM orders");
  					
  					int lastorderid = 0;
@@ -142,16 +157,18 @@
                 // Wrap the SQL exception in a runtime exception to propagate
                 // it upwards
              %>   
-                User dosssesn't exist.
+             	
+                 User doesn't exist.
             
             <form action="LoginRes.jsp" method="GET">
             	Please enter your Username no password required: <p />
             	<input value="" name="username" size="20"/><p /> 
             	<input type="hidden" name ="action" value="checkuser"/>
             	<input type="submit" value="Login"/>
-            </form> 
+            </form>  
             <%
-            }
+/*             	throw new RuntimeException(e);
+ */            }
             finally {
                 // Release resources in a finally block in reverse-order of
                 // their creation
