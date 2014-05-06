@@ -11,7 +11,20 @@
         Integer itemnumber = (Integer)(session.getAttribute("itemnumber"));
     %>
     
-    <% String action = request.getParameter("action"); %>
+    <% 
+	    if (session.getAttribute("username")==null){
+			%>
+			
+			<a href="/ACart//Login.jsp"> Please log in first </a>
+			
+			<% 
+		} else if (request.getParameter("action")==null) {
+			%>
+			<a href="/ACart//ProductBrowse.jsp"> Please select a product </a>
+			<%
+		} else{
+	    	String action = request.getParameter("action"); 
+    %>
 
     
     
@@ -90,4 +103,6 @@
 </body>
 
 </html>
-
+<%
+            }
+			%>

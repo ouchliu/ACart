@@ -3,6 +3,20 @@
 <body>
 
 	<%
+	
+	if (session.getAttribute("username")==null){
+		%>
+		
+		<a href="/ACart//Login.jsp"> Please log in first </a>
+		
+		<% 
+	} else if (request.getParameter("action")==null) {
+		%>
+		<a href="/ACart//LoginRes.jsp"> Please try to manage products </a>
+		<%
+	} else{
+	
+	
 		String productname = request.getParameter("name"); 
 		session.setAttribute("productname", productname); 
 	%>
@@ -42,12 +56,19 @@
                     // Create the prepared statement and use it to
                     // INSERT student values INTO the students table.
                     pstmt = conn
-                    .prepareStatement("INSERT INTO products (name, sku, category, price) VALUES (?, ?, ?, ?)");
+                    .prepareStatement("INSERT INTO products (name, sku, categoryid, price) VALUES (?, ?, ?, ?)");
 
-                    pstmt.setString(1, request.getParameter("name"));
-                    pstmt.setInt(2, Integer.parseInt(request.getParameter("sku")));                    
-                    pstmt.setString(3, request.getParameter("category"));
-                    pstmt.setFloat(4, Float.parseFloat(request.getParameter("price")));                    
+                    if(!request.getParameter("name").equals("")){
+                    	pstmt.setString(1, request.getParameter("name"));
+                    }
+                    if(!request.getParameter("sku").equals("")){
+                        pstmt.setString(2, request.getParameter("sku"));
+                    }
+                    
+                 	pstmt.setInt(3, Integer.parseInt(request.getParameter("categoryid")));
+                 	if(!request.getParameter("price").equals("")){
+                        pstmt.setFloat(4, Float.parseFloat(request.getParameter("price")));                    
+                    }
                     int rowCount = pstmt.executeUpdate();
 
                     // Commit transaction
@@ -65,9 +86,6 @@
             <%
                 conn.close();
             } catch (Exception e) {
-
-                // Wrap the SQL exception in a runtime exception to propagate
-                // it upwards
             %>
             	<h2>Sorry</h2>
             	Failure to insert new product.
@@ -92,6 +110,7 @@
                     conn = null;
                 }
             }
+	}
             %>
         </table>
         </td>

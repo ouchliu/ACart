@@ -15,5 +15,6 @@
 	<input type="hidden" name ="action" value="checkuser"/>
 	<input type="submit" value="Login"/>
 </form> 
+<a href="Signup.jsp">Haven't signup yet?</a>
 </body>
 </html>

@@ -2,18 +2,18 @@ CREATE TABLE users (
     id          SERIAL PRIMARY KEY,
     name        TEXT UNIQUE NOT NULL,
     role        TEXT NOT NULL,
-    age		INT,
+    age		INT CHECK (age > 0),
     state   	TEXT
 );
 
 CREATE TABLE states (
     id          SERIAL PRIMARY KEY,
-    name	TEXT
+    name	TEXT NOT NULL
 );
 
 CREATE TABLE roles (
     id          SERIAL PRIMARY KEY,
-    name	TEXT
+    name	TEXT NOT NULL
 );
 
 CREATE TABLE categories (
@@ -25,10 +25,10 @@ CREATE TABLE categories (
 CREATE TABLE products (
     id		SERIAL PRIMARY KEY,
     name	TEXT UNIQUE NOT NULL,
-    SKU		INT NOT NULL,
-    category    TEXT NOT NULL,
-    price	DECIMAL,
-    FOREIGN KEY (category) REFERENCES categories(name)
+    SKU		TEXT UNIQUE NOT NULL,
+    categoryid  INT NOT NULL,
+    price	DECIMAL CHECK (price > 0) NOT NULL,
+    FOREIGN KEY (categoryid) REFERENCES categories(id)
 );
 
 CREATE TABLE orders (
@@ -43,7 +43,7 @@ CREATE TABLE orders_products (
     id          SERIAL PRIMARY KEY,
     orderid	INT NOT NULL,
     productid   INT NOT NULL,
-    amount      INT NOT NULL,
+    amount      INT CHECK (amount > 0) NOT NULL,
     FOREIGN KEY (orderid) REFERENCES orders(id),
     FOREIGN KEY (productid) REFERENCES products(id)
 );

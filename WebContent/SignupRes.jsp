@@ -3,9 +3,15 @@
 <body>
 
 	<%
+	if (request.getParameter("action")==null) {
+		%>
+		<a href="/ACart//Signup.jsp"> Please signup first </a>
+		<%
+	} else{
+	
 		String username = request.getParameter("name"); 
-		session.setAttribute("username", username);
-	%>
+/* 		session.setAttribute("username", username);
+ */	%>
 
 <h2>SignUp</h2>
 <table>
@@ -60,7 +66,7 @@
                     conn.setAutoCommit(true);
                 }
             %>
-			Welcome <%= username %>
+			Welcome <%= username %>, You have successfully signed up!
             
             <%-- -------- Close Connection Code -------- --%>
             <%
@@ -89,6 +95,7 @@
                     conn = null;
                 }
             }
+	}
             %>
         </table>
         </td>

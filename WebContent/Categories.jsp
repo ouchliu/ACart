@@ -1,10 +1,18 @@
 <html>
 
 <body>
-<h2>Categories</h2>
-<table>
-    <tr>
-        <td>
+			<%
+				if (session.getAttribute("username")==null){
+			%>
+		
+				<a href="/ACart//Login.jsp"> Please log in first </a>
+		
+			<% 
+			} else {
+			%>
+
+
+
             <%-- Import the java.sql package --%>
             <%@ page import="java.sql.*"%>
             <%-- -------- Open Connection Code -------- --%>
@@ -15,6 +23,8 @@
             PreparedStatement pstmtNP = null;
             ResultSet rs = null;
             ResultSet rsNP = null;
+            
+            
             
             try {
                 // Registering Postgresql JDBC driver with the DriverManager
@@ -39,8 +49,9 @@
                     // INSERT student values INTO the students table.
                     pstmt = conn
                     .prepareStatement("INSERT INTO categories (name, description) VALUES (?, ?)");
-
-                    pstmt.setString(1, request.getParameter("name"));
+                    if(!request.getParameter("name").equals("")){
+                        pstmt.setString(1, request.getParameter("name"));
+                        }
                     pstmt.setString(2, request.getParameter("description"));
                     int rowCount = pstmt.executeUpdate();
 
@@ -106,12 +117,17 @@
                 // the student attributes FROM the Student table.
                 rs = statement.executeQuery("SELECT * FROM categories");
                 
-                pstmtNP = conn.prepareStatement("SELECT categories.name FROM categories WHERE categories.name NOT IN(SELECT category FROM products)");
+                pstmtNP = conn.prepareStatement("SELECT categories.name FROM categories WHERE categories.id NOT IN(SELECT categoryid FROM products)");
                 rsNP = pstmtNP.executeQuery();
                 ResultSet rsNPP = rsNP;
              %>
             
             <!-- Add an HTML table header row to format the results -->
+<h2>Categories</h2>
+<a href="LoginRes.jsp">Go Back<a>
+<table>
+    <tr>
+        <td>            
             <table border="1">
             <tr>
                 <th>ID</th>
@@ -175,7 +191,6 @@
                     <%-- Button --%>
                 </form>
             </tr>
-
             <%
                 }
             %>
@@ -197,9 +212,12 @@
                 // Wrap the SQL exception in a runtime exception to propagate
                 // it upwards
                 %>
-                	This Category already exists.
+                	<!-- This Category already exists. -->
                 <%
-            
+                /* throw new RuntimeException(e); */
+                %>
+                	Sorry you can't do this. <a href="Categories.jsp">Try agian</a>
+                <% 
             	/* The requested data modification failed.
              */
             }
@@ -234,11 +252,13 @@
                     conn = null;
                 }
             }
+			}
             %>
         </table>
         </td>
     </tr>
 </table>
+			
 </body>
 
 </html>

@@ -7,7 +7,7 @@
 	if (session.getAttribute("username")==null){
 		%>
 		
-		<a href="/ACart//Login.html"> Please log in first </a>
+		<a href="/ACart//Login.jsp"> Please log in first </a>
 		
 		<% 
 	} else {
@@ -18,7 +18,7 @@
       	<a href="BuyShoppingCart.jsp">Buy Shopping Cart<a>
       </span>
       Hello, <%= session.getAttribute("username")%> 
-      <a href="Login.html">Log out<a>
+      <a href="Login.jsp">Log out<a>
       <br/>
 </div>
 		<% 
@@ -27,9 +27,13 @@
 	/* String cate = null; */
 	if (action != null && action.equals("list")) {
 		session.setAttribute("cate", request.getParameter("cate"));
+		session.setAttribute("cateid", request.getParameter("cateid"));
 		if (!((String)(session.getAttribute("cate"))).equals("no")){
 			session.setAttribute("realcate", request.getParameter("cate"));
-		
+			session.setAttribute("realcateid", request.getParameter("cateid"));
+			session.setAttribute("search", null);
+		} else {
+			session.setAttribute("search", request.getParameter("search"));
 		}
 	}
 	
@@ -90,7 +94,7 @@
                 Statement statement = conn.createStatement();
                 // Use the created statement to SELECT
                 // the student attributes FROM the Student table.
-                rsCate = statement.executeQuery("SELECT name FROM categories"); 
+                rsCate = statement.executeQuery("SELECT name, id FROM categories"); 
              
                 
             %>
@@ -101,6 +105,7 @@
 	           	<form action="ProductBrowse.jsp" method="POST">
                     <input type="hidden" name="action" value="list"/>
                     <input type="hidden" name="cate" value="no"/>
+                    <input type="hidden" name="cateid" value="no"/>
                     <input value="" name="search" size="30"/>
                     <input type="submit" value="Search"/>
                 </form>
@@ -122,6 +127,8 @@
 		        	<form action="ProductBrowse.jsp" method="POST">
 		        			<input type="hidden" name="action" value="list"/> 
 		        			<input type="hidden" name="cate" value="<%=rsCate.getString("name")%>"/>
+		        			<input type="hidden" name="cateid" value="<%=rsCate.getString("id")%>"/>
+		                   
 		                    <th><input type="submit" value="<%=rsCate.getString("name")%>"/></th>
 		        	</form>
 		        </tr>
@@ -133,6 +140,8 @@
 		        	<form action="ProductBrowse.jsp" method="POST">
 		        			<input type="hidden" name="action" value="list"/> 
 		        			<input type="hidden" name="cate" value="All"/>
+		        			<input type="hidden" name="cateid" value="0"/>
+		        			
 		                    <th><input type="submit" value="All"/></th>
 		        	</form>
 		        </tr>
@@ -210,17 +219,17 @@
                     // INSERT student values INTO the students table.
                     	if (session.getAttribute("realcate")==null || ((String) (session.getAttribute("realcate"))).equals("All")) {
                     		pstmtL = conn.prepareStatement("SELECT * FROM products WHERE name ILIKE ?");
- 	                    	pstmtL.setString(1, "%" + request.getParameter("search") + "%");
+ 	                    	pstmtL.setString(1, "%" + (String)(session.getAttribute("search")) + "%");
                         	rsC = pstmtL.executeQuery(); 
                     	} else {
-                    		pstmtL = conn.prepareStatement("SELECT * FROM products WHERE name ILIKE ? AND category = ?");
- 	                    	pstmtL.setString(1, "%" + request.getParameter("search") + "%");
- 	                    	pstmtL.setString(2, (String) (session.getAttribute("realcate"))); 
+                    		pstmtL = conn.prepareStatement("SELECT * FROM products WHERE name ILIKE ? AND categoryid = ?");
+ 	                    	pstmtL.setString(1, "%" + (String)(session.getAttribute("search")) + "%");
+ 	                        pstmtL.setInt(2, Integer.parseInt((String)(session.getAttribute("realcateid"))));
 							rsC = pstmtL.executeQuery(); 
                     	}
 					} else {
-                        pstmtL = conn.prepareStatement("SELECT * FROM products WHERE products.category = ?");
- 						pstmtL.setString(1, (String) (session.getAttribute("cate")));                    
+                        pstmtL = conn.prepareStatement("SELECT * FROM products WHERE products.categoryid = ?");
+                        pstmtL.setInt(1, Integer.parseInt((String)(session.getAttribute("cateid"))));
                         rsC = pstmtL.executeQuery(); 
 					}
                
@@ -240,8 +249,10 @@
  						|| ((String)(session.getAttribute("cate"))).equals("no") && (request.getParameter("search").equals(""))
  				){                
                 	%>
+                	<tr>
                 	<br>
                     Not found
+                    </tr>
                     <% 
                 
                 } else {
@@ -278,11 +289,21 @@
                     	<%=rsC.getString("name")%>
                 	</td>
                 	<td>
-                    	<%=rsC.getInt("sku")%>
+                    	<%=rsC.getString("sku")%>
                 	</td>
                 	
                     <td>
-                    	<%=rsC.getString("category")%>
+                    	<%
+                    	rsCate = statement.executeQuery("SELECT name, id FROM categories"); 
+			 			String curcate = null;
+                    	while(rsCate.next()) {
+			 				if (rsC.getInt("categoryid")==(rsCate.getInt("id"))){
+                    			curcate = rsCate.getString("name");
+			 				}
+                    	}
+                    	
+                    	%>
+                    	<%=curcate%>
 					</td>
                     <td>
                     	$<%=rsC.getFloat("price")%>
@@ -314,12 +335,18 @@
 
                 // Close the Connection
                 conn.close();
-            } catch (SQLException e) {
+            } catch (Exception e) {
 
                 // Wrap the SQL exception in a runtime exception to propagate
                 // it upwards
-                throw new RuntimeException(e);
-            }
+/*                 throw new RuntimeException(e);
+ */
+            	%>
+            	<h2>Sorry</h2>
+            	Please try again!
+            	<br>
+            <%
+ 			}
             finally {
                 // Release resources in a finally block in reverse-order of
                 // their creation

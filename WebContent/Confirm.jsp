@@ -6,6 +6,18 @@
             <%@ page import="java.sql.*, java.util.*, cartitem.*" %>
             <%-- -------- Open Connection Code -------- --%>
             <%
+            if (session.getAttribute("username")==null){
+    			%>
+    			
+    			<a href="/ACart//Login.jsp"> Please log in first </a>
+    			
+    			<% 
+    		} else if (request.getParameter("action")==null) {
+    			%>
+    			<a href="/ACart//ProductBrowse.jsp"> Please select a product </a>
+    			<%
+    		} else{
+    	    	String action = request.getParameter("action"); 
          	// retrieves student data from session scope
             LinkedHashMap<String, Cartitem> cartitem = (LinkedHashMap<String, Cartitem>)session.getAttribute("cartitem");
         
@@ -42,8 +54,8 @@
 			
 			<%-- -------- PAY Code -------- --%>
             <%
-                String action = request.getParameter("action");
-                // Check if an insertion is requested
+/*                 String action = request.getParameter("action");
+ */                // Check if an insertion is requested
                 if (action != null && action.equals("pay")) {
 %>
 				
@@ -96,16 +108,16 @@
                         pstmtOP.setInt(3, ((Cartitem)pair.getValue()).getAmount());     
                         int rowCountOP = pstmtOP.executeUpdate();
                         
-                        pstmtPro = conn
-                                .prepareStatement("UPDATE products SET sku = (sku - ?) WHERE id = ?");
+                        /* pstmtPro = conn
+                                .prepareStatement("UPDATE products SET sku = (sku - ?) WHERE id = ?"); */
 						%>
-                        Amount:<%= ((Cartitem)pair.getValue()).getAmount()%>
+                        <%-- Amount:<%= ((Cartitem)pair.getValue()).getAmount()%>
                         Id:<%= ((Cartitem)pair.getValue()).getId()%>
-                        <% 
-                        pstmtPro.setInt(1, ((Cartitem)pair.getValue()).getAmount());     
+                        --%> <% 
+                        /* pstmtPro.setInt(1, ((Cartitem)pair.getValue()).getAmount());     
                         pstmtPro.setInt(2, ((Cartitem)pair.getValue()).getId());                    
 
-                        int rowCountPro = pstmtPro.executeUpdate();
+                        int rowCountPro = pstmtPro.executeUpdate(); */
                         
                         
             		}
@@ -167,12 +179,14 @@
 
                 // Close the Connection
                 conn.close();
-            } catch (SQLException e) {
+            } catch (Exception e) {
 			
                 // Wrap the SQL exception in a runtime exception to propagate
                 // it upwards
              %>   
              	
+    			<a href="/ACart//ProductBrowse.jsp"> Please select a product </a>
+    			
                  <!-- User doesn't exist.
             
             <form action="LoginRes.jsp" method="GET">
@@ -182,7 +196,7 @@
             	<input type="submit" value="Login"/>
             </form> -->  
             <%
-             	throw new RuntimeException(e);
+             	/* throw new RuntimeException(e); */
              }
             finally {
                 // Release resources in a finally block in reverse-order of
@@ -195,6 +209,7 @@
                     conn = null;
                 }
             }
+    		}
             %>
         
 </body>
