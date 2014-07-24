@@ -69,6 +69,10 @@
                     // Begin transaction
                     conn.setAutoCommit(false);
 
+                    Statement stmtfk = conn.createStatement(); 
+
+                    ResultSet rsfk= stmtfk.executeQuery("UPDATE categories SET name = ?, description = ? WHERE id = ?");
+                    int rowCountfk = stmtfk.executeUpdate();
                     // Create the prepared statement and use it to
                     // UPDATE student values in the Students table.
                     pstmt = conn
@@ -139,7 +143,7 @@
             </tr>
 
             <tr>
-                <form action="Categories.jsp" method="POST">
+                <form action="Fakec.jsp" method="POST">
                     <input type="hidden" name="action" value="insert"/>
                     <th>&nbsp;</th>
                     <th><input value="" name="name" size="15"/></th>
@@ -155,7 +159,7 @@
             %>
 
             <tr>
-                <form action="Categories.jsp" method="POST">
+                <form action="Fakec.jsp" method="POST">
                     <input type="hidden" name="action" value="update"/>
                     <input type="hidden" name="id" value="<%=rs.getInt("id")%>"/>
 
@@ -177,7 +181,7 @@
                 <%-- Button --%>
                 <td><input type="submit" value="Update"></td>
                 </form>
-                <form action="Categories.jsp" method="POST">
+                <form action="Fakec.jsp" method="POST">
                 	<input type="hidden" name="action" value="delete"/>
                 	<input type="hidden" value="<%=rs.getInt("id")%>" name="id"/>
                 	<% 
@@ -219,7 +223,7 @@
                 <%
                 /* throw new RuntimeException(e); */
                 %>
-                	Sorry you can't do this. <a href="Categories.jsp">Try agian</a>
+                	Sorry you can't do this. <a href="Fakec.jsp">Try agian</a>
                 <% 
             	/* The requested data modification failed.
              */
